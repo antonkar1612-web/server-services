@@ -1,0 +1,6 @@
+.env
+secrets/
+*.log
+*.png
+*.conf
+!*.example
