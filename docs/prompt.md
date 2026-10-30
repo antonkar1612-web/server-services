@@ -3,26 +3,33 @@
 ## Контекст
 
 - Репозиторий: https://github.com/antonkar1612-web/server-services
-- Назначение: Docker Compose + конфиги сервисов + скрипты управления.
-- Слой: прикладной. Базовая инфраструктура — в server-infra.
+- Назначение: Docker Compose + конфиги + скрипты управления.
+- Слой прикладной; базовая инфраструктура — server-infra.
+- Публикация: `/root/publish-services.sh` (копирует `/root/services-src/`
+  в репозиторий, авто-бампит минорную версию тега, пушит).
 
 ## scripts/wg-manager.sh
 
-Управление WireGuard: клиенты, QR, mail.
+Управление WireGuard: init, adopt, add, remove, list, qr, qr-term,
+export, reload, show, status, mail, config.
 
-- Команды: init, adopt, add, remove, list, qr, qr-term, export, reload,
-  show, status, mail, config.
-- Конфиги:
-  - /root/secrets/server-infra.env — SERVER_IP (внешн.), WG_PORT, WG_NETWORK
-  - /root/secrets/wg-manager.env — WAN_IF, SERVER_HOST override, SMTP_*
-  - /etc/wireguard/wg0.conf — серверный конфиг WG
-- adopt: подхватывает wg0.conf, созданный bootstrap.sh (не падает)
+- adopt — подхватывает wg0.conf от bootstrap.sh
+- Конфиги: /root/secrets/server-infra.env, /root/secrets/wg-manager.env
 - Log: /var/log/wg-manager.log
-- shellcheck clean
+
+## scripts/backup-all.sh
+
+Бэкап: /root/secrets, /etc/wireguard, docker volumes.
+
+- BACKUP_DIR=/var/backups/server-services
+- KEEP_DAYS=14, MIN_FREE_MB=500
+- Lock через flock, идемпотентен
+- Конфиг: /root/secrets/backup.env (опционально)
+- Log: /var/log/backup-all.log
 
 ## Правила
 
 - Секреты — только в ~/secrets/, никогда в Git
 - Все скрипты идемпотентны
-- shellcheck в CI
-- OpenRouter — лимит 50 запросов/день
+- shellcheck clean
+- OpenRouter — 50 запросов/день

@@ -5,18 +5,27 @@ Docker Compose и скрипты управления сервисами.
 ## Структура
 
     scripts/
-      wg-manager.sh          — управление WireGuard (клиенты, QR, mail)
-      wg-manager.env.example — пример конфига (~/secrets/wg-manager.env)
+      wg-manager.sh           — управление WireGuard
+      wg-manager.env.example  — пример (~/secrets/wg-manager.env)
+      backup-all.sh           — бэкап секретов + WG + docker volumes
+      backup.env.example      — пример (~/secrets/backup.env)
     docs/
-      prompt.md              — контекст для нового чата
+      prompt.md               — контекст для нового чата
 
 ## wg-manager.sh
 
-Команды: init, adopt, add, remove, list, qr, qr-term, export, reload,
-show, status, mail, config.
+    sudo ./scripts/wg-manager.sh <команда>
+
+Команды: init, adopt, add, remove, list, qr, qr-term, export,
+reload, show, status, mail, config.
 
 Зависит от `/root/secrets/server-infra.env` (SERVER_IP, WG_PORT,
 WG_NETWORK — создан `bootstrap.sh` из репозитория `server-infra`).
-SMTP для `mail` — в `/root/secrets/wg-manager.env`.
 
-Подробнее: `./scripts/wg-manager.sh` без аргументов.
+## backup-all.sh
+
+    sudo ./scripts/backup-all.sh
+
+Бэкап: `/root/secrets/`, `/etc/wireguard/`, docker volumes.
+Результат: `/var/backups/server-services/`, ротация (`KEEP_DAYS=14`).
+Конфиг: `/root/secrets/backup.env` (опционально).
