@@ -22,6 +22,21 @@ reload, show, status, mail, config.
 Зависит от `/root/secrets/server-infra.env` (SERVER_IP, WG_PORT,
 WG_NETWORK — создан `bootstrap.sh` из репозитория `server-infra`).
 
+## update-all.sh
+
+    sudo ./scripts/update-all.sh [--apt-only|--docker-only|--dry-run]
+
+Обновление: `apt update && upgrade` + `docker compose pull && up -d` во
+всех каталогах из `COMPOSE_DIRS`. Лог: `/var/log/update-all.log`.
+Конфиг: `/root/secrets/update.env` (опционально).
+
+## healthcheck.sh
+
+    sudo ./scripts/healthcheck.sh [--quiet]
+
+Сводка: docker, wg, ufw, fail2ban, диск, RAM, load, systemd.
+Exit 1 если есть проблемы. `--quiet` — только проблемы.
+
 ## backup-all.sh
 
     sudo ./scripts/backup-all.sh

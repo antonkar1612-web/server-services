@@ -17,6 +17,22 @@ export, reload, show, status, mail, config.
 - Конфиги: /root/secrets/server-infra.env, /root/secrets/wg-manager.env
 - Log: /var/log/wg-manager.log
 
+## scripts/update-all.sh
+
+Обновление apt + docker compose.
+
+- Флаги: --apt-only, --docker-only, --dry-run
+- COMPOSE_DIRS — список каталогов с docker-compose.yml
+- Конфиг: /root/secrets/update.env
+- Log: /var/log/update-all.log
+
+## scripts/healthcheck.sh
+
+Сводка состояния: docker, wg, ufw, fail2ban, диск, RAM, load, systemd.
+
+- Exit 1 если есть проблемы
+- --quiet — только проблемы
+
 ## scripts/backup-all.sh
 
 Бэкап: /root/secrets, /etc/wireguard, docker volumes.
