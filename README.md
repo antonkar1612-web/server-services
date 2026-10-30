@@ -37,6 +37,26 @@ WG_NETWORK — создан `bootstrap.sh` из репозитория `server-i
 Сводка: docker, wg, ufw, fail2ban, диск, RAM, load, systemd.
 Exit 1 если есть проблемы. `--quiet` — только проблемы.
 
+## wg-include-blocked.sh — VPN только для заблокированных
+
+    sudo ./scripts/wg-include-blocked.sh --update   # собрать CIDR
+    sudo ./scripts/wg-include-blocked.sh --apply    # применить
+
+Через VPN идёт **только** трафик к заблокированным в РФ ресурсам:
+Telegram, Discord, YouTube/Google, Meta, Twitter/X. Остальное (Yandex,
+Mail.ru, Госуслуги, банки) — напрямую через провайдера.
+
+**Плюсы:** IP провайдера не «засвечен» на зарубежных ресурсах, обычные
+сайты работают с российской скоростью, не нужно бояться блокировки за
+использование VPN.
+
+**Списки:** встроены в скрипт (Telegram, Discord, Google, Meta, Twitter).
+Дополнять — в переменных `TELEGRAM_CIDR`, `DISCORD_CIDR` и т.д.
+Или включить `EXTERNAL_SOURCES` (например, V3nilla/IPSets-For-Bypass).
+
+**Альтернатива:** `wg-exclude-ru.sh` — обратная стратегия (через VPN всё,
+кроме РФ). Использовать, если нужно скрыть весь зарубежный трафик.
+
 ## backup-all.sh
 
     sudo ./scripts/backup-all.sh

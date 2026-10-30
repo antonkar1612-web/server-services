@@ -49,8 +49,8 @@ load_config() {
   : "${SUBNET_NET:=${WG_NETWORK:-10.30.0.0/24}}"
   : "${WG_SERVER_IP:=${SUBNET_NET%.*}.1}"
   : "${SERVER_HOST:=${_external_ip}}"
-  : "${CLIENT_DNS:=1.1.1.1}"
-  : "${CLIENT_MTU:=1420}"
+  : "${CLIENT_DNS:=77.88.8.8, 77.88.8.1}"
+  : "${CLIENT_MTU:=1380}"
   : "${CLIENT_IP_START:=2}"
   : "${CLIENT_IP_END:=254}"
   : "${GEN_QR:=true}"
@@ -195,6 +195,12 @@ gen_client() {
   PSK="$(wg genpsk)"
   S_PUB="$(server_pubkey)"
 
+  local ALLOWED_IPS="0.0.0.0/0, ::/0"
+  if [[ -s /var/lib/wg-manager/allowed-ips.txt ]]; then
+    ALLOWED_IPS="$(cat /var/lib/wg-manager/allowed-ips.txt)"
+    log "  AllowedIPs: split-tunnel (${ALLOWED_IPS:0:40}...)"
+  fi
+
   cat >"$CLIENT_CONF" <<EOF
 [Interface]
 PrivateKey = ${C_PRIV}
@@ -206,7 +212,7 @@ MTU        = ${CLIENT_MTU}
 PublicKey    = ${S_PUB}
 PresharedKey = ${PSK}
 Endpoint     = ${SERVER_HOST}:${PORT}
-AllowedIPs   = 0.0.0.0/0, ::/0
+AllowedIPs   = ${ALLOWED_IPS}
 PersistentKeepalive = 25
 EOF
   chmod 600 "$CLIENT_CONF"
